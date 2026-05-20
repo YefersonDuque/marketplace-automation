@@ -1,28 +1,27 @@
 import { chromium } from 'playwright';
+import { appConfig } from '../../config/app.js';
 
 export async function openWithSession() {
   const browser = await chromium.launch({
     headless: false,
   });
 
-  try {
-    const context = await browser.newContext({
-      storageState: './storage/facebook-session.json',
-    });
+  const context = await browser.newContext({
+    storageState: appConfig.storage.session,
+  });
 
-    const page = await context.newPage();
+  const page = await context.newPage();
 
-    console.log('Abriendo Facebook con sesión...');
+  console.log('Abriendo Facebook con sesión...');
 
-    await page.goto('https://www.facebook.com', {
-      waitUntil: 'domcontentloaded',
-      timeout: 60000,
-    });
+  await page.goto(appConfig.urls.marketplace, {
+    waitUntil: 'domcontentloaded',
+  });
 
-    console.log('Sesión cargada.');
+  console.log('Sesión cargada.');
 
-    await page.waitForTimeout(15000);
-  } finally {
-    await browser.close();
-  }
+  return {
+    browser,
+    page,
+  };
 }
