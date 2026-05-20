@@ -2,6 +2,7 @@ import { chromium } from 'playwright';
 import fs from 'fs/promises';
 import type { Listing } from '../../types/listing.js';
 import { compareListings } from './compareListings.js';
+import { getListings } from './getListings.js';
 
 export async function exportListings() {
   const browser = await chromium.launch({
@@ -22,16 +23,7 @@ export async function exportListings() {
 
     await page.waitForTimeout(10000);
 
-    const content = (await page.locator('[role="main"]').textContent()) ?? '';
-
-    const matches = [
-      ...content.matchAll(/([A-ZÁÉÍÓÚ0-9][A-ZÁÉÍÓÚ0-9\s]+)\$(\s*\d[\d.]*)/g),
-    ];
-
-    const listings: Listing[] = matches.map((m) => ({
-      name: m[1].trim(),
-      price: m[2].trim(),
-    }));
+    const listings = await getListings(page);
 
     await compareListings(listings);
     
