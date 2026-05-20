@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import type { Listing } from '../../types/listing.js';
 import { compareListings } from './compareListings.js';
 import { getListings } from './getListings.js';
+import { appConfig } from '../../config/app.js';
 
 export async function exportListings() {
   const browser = await chromium.launch({
@@ -11,24 +12,24 @@ export async function exportListings() {
 
   try {
     const context = await browser.newContext({
-      storageState: './storage/facebook-session.json',
+      storageState: appConfig.storage.session,
     });
 
     const page = await context.newPage();
 
-    await page.goto('https://www.facebook.com/marketplace/you/selling', {
+    await page.goto(appConfig.urls.myListings, {
       waitUntil: 'domcontentloaded',
-      timeout: 60000,
+      timeout: appConfig.browser.timeout,
     });
 
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(appConfig.browser.waitAfterLoad);
 
     const listings = await getListings(page);
 
     await compareListings(listings);
-    
+
     await fs.writeFile(
-      './storage/exports/listings.json',
+      appConfig.storage.exports,
       JSON.stringify(listings, null, 2),
     );
 

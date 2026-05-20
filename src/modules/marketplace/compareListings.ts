@@ -1,13 +1,14 @@
 import fs from 'fs/promises';
 
 import type { Listing } from '../../types/listing.js';
+import { appConfig } from '../../config/app.js';
 
 export async function compareListings(
   current: Listing[]
 ) {
   try {
     const raw = await fs.readFile(
-      './storage/exports/listings.json',
+      appConfig.storage.exports,
       'utf-8'
     );
 
