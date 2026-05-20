@@ -1,20 +1,27 @@
+import 'dotenv/config';
+
 export const appConfig = {
   urls: {
-    facebook: 'https://www.facebook.com',
+    facebook:
+      process.env.FACEBOOK_URL!,
 
     marketplace:
-      'https://www.facebook.com/marketplace',
+      process.env.FACEBOOK_MARKETPLACE!,
 
     myListings:
-      'https://www.facebook.com/marketplace/you/selling',
+      process.env.FACEBOOK_MY_LISTINGS!,
   },
 
   browser: {
     headless: false,
 
-    timeout: 60000,
+    timeout:
+      Number(process.env.TIMEOUT),
 
-    waitAfterLoad: 10000,
+    waitAfterLoad:
+      Number(
+        process.env.WAIT_AFTER_LOAD
+      ),
   },
 
   storage: {

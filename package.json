@@ -1,22 +1,14 @@
 {
   "name": "marketplace-automation",
-
   "version": "1.0.0",
-
   "type": "module",
-
   "scripts": {
     "dev": "tsx src/main.ts"
   },
-
   "keywords": [],
-
   "author": "",
-
   "license": "ISC",
-
   "description": "",
-
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.9.1",
@@ -27,8 +19,8 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.4"
   },
-
   "dependencies": {
+    "dotenv": "^17.4.2",
     "playwright": "^1.60.0"
   }
 }
