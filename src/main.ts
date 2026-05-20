@@ -1,9 +1,9 @@
-import { openWithSession } from './modules/auth/openWithSession.js';
+import { exportListings } from './modules/marketplace/exportListings.js';
 
 async function bootstrap() {
   console.log('Iniciando aplicación...');
 
-  await openWithSession();
+  await exportListings();
 
   console.log('Proceso terminado.');
 }
