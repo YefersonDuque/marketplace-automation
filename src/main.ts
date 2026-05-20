@@ -1,9 +1,9 @@
-import { openBrowser } from './modules/browser/openBrowser';
+import { openWithSession } from './modules/auth/openWithSession.js';
 
 async function bootstrap() {
   console.log('Iniciando aplicación...');
 
-  await openBrowser();
+  await openWithSession();
 
   console.log('Proceso terminado.');
 }
