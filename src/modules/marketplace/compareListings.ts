@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 
 import type { Listing } from '../../types/listing.js';
 import { appConfig } from '../../config/app.js';
+import { logger } from '../../utils/logger.js';
 
 export async function compareListings(
   current: Listing[]
@@ -31,21 +32,19 @@ export async function compareListings(
         (x) => !currentNames.includes(x)
       );
 
-    console.log('');
-
-    console.log('CAMBIOS');
-    console.log('========');
-
-    console.log(
+    logger.info('');
+    logger.info('CAMBIOS');
+    logger.info('========');
+    logger.info(
       `Nuevas: ${added.length}`
     );
 
-    console.log(
+    logger.info(
       `Eliminadas: ${removed.length}`
     );
 
   } catch {
-    console.log(
+    logger.info(
       'No existe export anterior.'
     );
   }

@@ -1,11 +1,12 @@
 import { exportListings } from './modules/marketplace/exportListings.js';
+import { logger } from './utils/logger.js';
 
 async function bootstrap() {
-  console.log('Iniciando aplicación...');
+  logger.info('Iniciando aplicación...');
 
   await exportListings();
 
-  console.log('Proceso terminado.');
+  logger.info('Proceso terminado.');
 }
 
 bootstrap();
