@@ -3,25 +3,45 @@ import { Page } from 'playwright';
 import type { Listing } from '../../types/listing.js';
 
 export async function getListings(page: Page): Promise<Listing[]> {
-  await page.waitForTimeout(3000);
+  await page.waitForSelector('[role="main"]', {
+    timeout: 60000,
+  });
 
-  const content = await page.locator('[role="main"]').textContent();
+  await page.waitForTimeout(5000);
 
-  if (!content) {
-    return [];
+  const content = await page.locator('[role="main"]').innerText();
+
+  const rows = content
+    .split('\n')
+    .map((x) => x.trim())
+    .filter(Boolean);
+
+  const listings: Listing[] = [];
+
+  for (let i = 0; i < rows.length - 1; i++) {
+    const title = rows[i];
+
+    const price = rows[i + 1];
+
+    if (!price.startsWith('$')) {
+      continue;
+    }
+
+    listings.push({
+      id: title.toLowerCase().replace(/\s+/g, '-'),
+
+      title,
+
+      price: Number(price.replace('$', '').replace(/\./g, '').trim()),
+
+      url: '',
+
+      scrapedAt: new Date().toISOString(),
+    });
   }
 
-  const matches = content.match(/\$\s?[\d.,]+/g) || [];
+  console.log('');
+  console.log(`Extraídas: ${listings.length}`);
 
-  return matches.map((price, index) => ({
-    id: String(index),
-
-    title: `Producto ${index + 1}`,
-
-    price: Number(price.replace('$', '').replace(/\./g, '')),
-
-    url: '',
-
-    scrapedAt: new Date().toISOString(),
-  }));
+  return listings;
 }
