@@ -1,5 +1,11 @@
 export interface Listing {
-  name: string;
+  id: string;
 
-  price: string;
+  title: string;
+
+  price?: number;
+
+  url: string;
+
+  scrapedAt: string;
 }

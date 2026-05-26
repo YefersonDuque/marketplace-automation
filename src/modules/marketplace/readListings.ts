@@ -1,4 +1,5 @@
 import { chromium } from 'playwright';
+
 import type { Listing } from '../../types/listing.js';
 
 export async function readListings() {
@@ -13,37 +14,43 @@ export async function readListings() {
 
     const page = await context.newPage();
 
-    await page.goto(
-      'https://www.facebook.com/marketplace/you/selling',
-      {
-        waitUntil: 'domcontentloaded',
-        timeout: 60000,
-      }
-    );
+    await page.goto('https://www.facebook.com/marketplace/you/selling', {
+      waitUntil: 'domcontentloaded',
+
+      timeout: 60000,
+    });
 
     await page.waitForTimeout(10000);
 
-    const content =
-      (await page.locator('[role="main"]').textContent()) ?? '';
+    const content = (await page.locator('[role="main"]').textContent()) ?? '';
 
     const names = [
-      ...content.matchAll(
-        /([A-ZÁÉÍÓÚ0-9][A-ZÁÉÍÓÚ0-9\s]+)\$(\s*\d[\d.]*)/g
-      ),
+      ...content.matchAll(/([A-ZÁÉÍÓÚ0-9][A-ZÁÉÍÓÚ0-9\s]+)\$(\s*\d[\d.]*)/g),
     ];
 
-    const products: Listing[] = names.map((m) => ({
-      name: m[1].trim(),
-      price: m[2].trim(),
+    const products: Listing[] = names.map((m, index) => ({
+      id: String(index),
+
+      title: m[1].trim(),
+
+      price: Number(m[2].replace(/\./g, '').trim()),
+
+      url: '',
+
+      scrapedAt: new Date().toISOString(),
     }));
 
     console.log('');
+
     console.log('PUBLICACIONES');
+
     console.log('==============');
 
     products.forEach((p, index) => {
-      console.log(`${index + 1}. ${p.name}`);
-      console.log(`   Precio: ${p.price}`);
+      console.log(`${index + 1}. ${p.title}`);
+
+      console.log(`   Precio: ${p.price ?? '-'}`);
+
       console.log('');
     });
 

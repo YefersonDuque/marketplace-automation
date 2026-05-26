@@ -3,7 +3,7 @@ import { browserConfig } from '../../config/browser.config.js';
 
 export async function openBrowser() {
   const browser = await chromium.launch({
-    headless: browserConfig.headless,
+    headless: false,
   });
 
   try {

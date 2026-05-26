@@ -4,48 +4,30 @@ import type { Listing } from '../../types/listing.js';
 import { appConfig } from '../../config/app.js';
 import { logger } from '../../utils/logger.js';
 
-export async function compareListings(
-  current: Listing[]
-) {
+export async function compareListings(current: Listing[]) {
   try {
-    const raw = await fs.readFile(
-      appConfig.storage.exports,
-      'utf-8'
-    );
+    const raw = await fs.readFile(appConfig.storage.exports, 'utf-8');
 
-    const previous: Listing[] =
-      JSON.parse(raw);
+    const previous: Listing[] = JSON.parse(raw);
 
-    const previousNames =
-      previous.map((p) => p.name);
+    const previousTitles = previous.map((p) => p.title);
 
-    const currentNames =
-      current.map((p) => p.name);
+    const currentTitles = current.map((p) => p.title);
 
-    const added =
-      currentNames.filter(
-        (x) => !previousNames.includes(x)
-      );
+    const added = currentTitles.filter((x) => !previousTitles.includes(x));
 
-    const removed =
-      previousNames.filter(
-        (x) => !currentNames.includes(x)
-      );
+    const removed = previousTitles.filter((x) => !currentTitles.includes(x));
 
     logger.info('');
+
     logger.info('CAMBIOS');
+
     logger.info('========');
-    logger.info(
-      `Nuevas: ${added.length}`
-    );
 
-    logger.info(
-      `Eliminadas: ${removed.length}`
-    );
+    logger.info(`Nuevas: ${added.length}`);
 
+    logger.info(`Eliminadas: ${removed.length}`);
   } catch {
-    logger.info(
-      'No existe export anterior.'
-    );
+    logger.info('No existe export anterior.');
   }
 }
